@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Roboto Mono", monospace;
+  font-size: 14px;
+}
+
+nav {
+  font-size: 16px;
+  background-color: darkcyan;
+  padding: 1rem 1.5rem;
+}
+
+.nav-logo {
+  display: inline;
+  font-size: 1.5rem;
+  padding: 0;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-links {
+  display: none;
+}
+
+.nav-item:first-child {
+  padding-top: 2rem;
+}
+
+.nav-item {
+  display: block;
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 0;
+}
+
+.nav-toggle {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.nav-active {
+  display: block;
+}
+
+@media screen and (min-width: 768px) {
+  .navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: block;
+    margin-left: 2rem;
+    flex-grow: 1;
+  }
+
+  .nav-item:first-child {
+    padding-top: 0;
+  }
+
+  .nav-item {
+    display: inline-block;
+    padding: 0 0.5rem;
+  }
+
+  .push-right {
+    float: right;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+}
+
+/*# sourceMappingURL=layout.css.map */
