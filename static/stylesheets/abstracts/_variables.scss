@@ -1,0 +1,31 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+
+/// Regular font family
+/// @type List
+$text-font-stack: 'Roboto Mono', monospace;
+$text-color: black;
+$button-text-color: white;
+
+$border: 1px solid #cccccc;
+
+$color1: rgba(31, 32, 65, 1);
+$color2: rgba(75, 63, 114, 1);
+$color3: rgba(65, 123, 90, 1);
+$color4: rgba(208, 206, 186, 1);
+$color5: rgba(233, 210, 192, 1);
+
+
+/// Container's maximum width
+/// @type Length
+$max-width: 1180px !default;
+
+
+/// Breakpoints map
+/// @prop {String} keys - Keys are identifiers mapped to a given length
+/// @prop {Map} values - Values are actual breakpoints expressed in pixels
+$breakpoint-phone: 640px !default;
+$breakpoint-tablet: 768px !default;
+$breakpoint-desktop: 1024px !default;

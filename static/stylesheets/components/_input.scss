@@ -1,0 +1,16 @@
+input[type=text],
+input[type=password],
+textarea {
+  padding: 12px;
+  border: $border;
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: $color1;
+  color: $button-text-color;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

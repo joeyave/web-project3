@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     {% block head %}
@@ -27,18 +27,18 @@
             <a class="nav-item" href="#">About</a>
 
             {% if session.user_id %}
-                <a class="nav-item" href="#">Log Out</a>
-                <a class="nav-item" href="#">{{ session.username }}</a>
-                <a class="nav-item" href="#">Add Blog</a>
+                <a class="nav-item push-right" href="{{ url_for('logout') }}">Log Out</a>
+                <a class="nav-item" href="{{ url_for('add_blog_post') }}">Add blog post</a>
+                <a class="nav-item nav-username" href="#">{{ session.username }}</a>
             {% else %}
                 <a class="nav-item push-right" href="{{ url_for('registration') }}">Registration</a>
-                <a class="nav-item push-right" href="#">Log In</a>
+                <a class="nav-item" href="{{ url_for('login') }}">Log In</a>
             {% endif %}
         </div>
     </nav>
 
-    <div class="box sidebar">{% block sidebar %}{% endblock %}</div>
-    <div class="box content">{% block content %}{% endblock %}</div>
+    <div class="container sidebar">{% block sidebar %}Sidebar TODO{% endblock %}</div>
+    <div class="container content">{% block content %}{% endblock %}</div>
 
     <div class="footer">
         <span class="icon"><i class="fab fa-instagram"></i></span>

@@ -73,7 +73,7 @@ def get_blog(blog_id):
     return render_template("blog.html", blog=blog, soup=soup)
 
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route('/registration', methods=["GET", "POST"])
 def registration():
     session.clear()
 
@@ -142,8 +142,8 @@ def logout():
     return redirect("/")
 
 
-@app.route('/add_blog', methods=["GET", "POST"])
-def add_blog():
+@app.route('/add_blog_post', methods=["GET", "POST"])
+def add_blog_post():
     if request.method == "POST":
         if session.get('user_id'):
             db.execute(
@@ -159,7 +159,7 @@ def add_blog():
         else:
             return "login first"
     else:
-        return render_template("add_blog.html")
+        return render_template("add_blog_post.html")
 
 
 @app.route('/upload_file', methods=["POST"])

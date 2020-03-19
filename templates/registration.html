@@ -1,75 +1,43 @@
 {% extends "layout.html" %}
 
-{% block title %}Register{% endblock %}
-
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
-{% endblock %}
+{% block title %}Registration{% endblock %}
 
 {% block content %}
-    <div class="form">
-        <form action="{{ url_for('registration') }}" method="POST" id="registration-form">
-            <div class="row">
-                <div class="col-25">
-                    <label for="fname">First Name</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="fname" name="firstname" placeholder="Your name..">
-                </div>
-            </div>
+    <form action="{{ url_for('registration') }}" method="POST" class="form" id="registration-form">
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" name="firstname" placeholder="Your name..">
 
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Last Name</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="lname" name="lastname" placeholder="Your last name..">
-                </div>
-            </div>
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" name="lastname" placeholder="Your last name..">
 
-            <div class="row">
-                <div class="col-25">
-                    <label for="username">Username</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="username" name="username" placeholder="Username..">
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-25">
-                    <label for="password">Password</label>
-                </div>
-                <div class="col-75">
-                    <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                           placeholder="Password.."
-                           title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username..">
 
-                    <div class="message" id="password-validation-message">
-                        <p>Password must contain the following:</p>
-                        <p id="letter" class="invalid">A lowercase letter</p>
-                        <p id="capital" class="invalid">A capital letter</p>
-                        <p id="number" class="invalid">A number</p>
-                        <p id="length" class="invalid">Minimum 8 characters</p>
-                    </div>
-                </div>
-            </div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+               placeholder="Password.."
+               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
 
-            <div class="row">
-                <div class="col-25">
-                    <label for="password-confirm">Confirm password</label>
-                </div>
-                <div class="col-75">
-                    <input type="password" id="password-confirm" name="password_confirm" placeholder="Password..">
-                    <div class="message" id="password-confirm-message">
-                        <p>passwords are different</p>
-                    </div>
-                </div>
-            </div>
+        <div class="form-message" id="password-validation-message">
+            <p>Password must contain the following:</p>
+            <p id="letter">A lowercase letter</p>
+            <p id="capital">A capital letter</p>
+            <p id="number">A number</p>
+            <p id="length">Minimum 8 characters</p>
+        </div>
 
-            <div class="row">
-                <input type="submit" id="registration-form-submit" value="Submit">
-            </div>
-        </form>
-    </div>
+        <label for="password-confirm">Confirm password</label>
+        <input type="password" id="password-confirm" name="password_confirm" placeholder="Password..">
+
+        <div class="form-message invalid" id="password-confirm-message">
+            <p>passwords are different</p>
+        </div>
+
+        <input type="submit" id="registration-form-submit" value="Submit">
+    </form>
+{% endblock %}
+
+{% block body %}
+<script src="{{ url_for('static', filename='scripts/registration.js') }}"></script>
 {% endblock %}

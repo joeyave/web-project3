@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Add blog post{% endblock %}
+
+{% block content %}
+    <h1>Add your own blog post here!</h1>
+
+    <form action="{{ url_for('add_blog_post') }}" method="POST" class="form add_blog_post_form">
+        <label for="blog_title">Blog Title</label>
+        <input type="text" id="blog_title" name="blog_title" placeholder="Your title.." autocomplete="off"
+               required>
+
+        <label for="blog_post">Blog Post</label>
+        <textarea id="blog_post" name="blog_post" rows="20" placeholder="Some markdown text here.."
+                  required></textarea>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <form id="upload-file-form">
+        <div class="col-25"></div>
+        <div class="col-75">
+            <input type="file" class="validate" name="files" id="files" multiple required/>
+            <button id="upload-file-button" type="submit">Add Img</button>
+        </div>
+    </form>
+
+    <div id="form-response"></div>
+{% endblock %}
