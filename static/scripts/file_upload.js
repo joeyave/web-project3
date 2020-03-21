@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#upload-file-form').onsubmit = () => {
+    document.querySelector('#files').onchange = () => {
         const request = new XMLHttpRequest();
         const files = document.querySelector('#files').files;
         request.open('POST', '/upload_file');
