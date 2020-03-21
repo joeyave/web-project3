@@ -38,6 +38,14 @@
     &--active {
       display: block;
     }
+
+    .divider {
+      display: none;
+
+      @include mobile-only {
+        display: block;
+      }
+    }
   }
 
   &__toggle {

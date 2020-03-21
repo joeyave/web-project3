@@ -111,6 +111,14 @@ body {
 .header .nav--active {
   display: block;
 }
+.header .nav .divider {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .header .nav .divider {
+    display: block;
+  }
+}
 .header__toggle {
   font-size: 1.5rem;
   cursor: pointer;
@@ -134,15 +142,14 @@ body {
 
 .nav {
   width: 100%;
+  display: flex;
 }
 .nav__link {
   font-size: 1rem;
   margin: 0 0.5rem;
 }
 .nav__link--right {
-  float: right;
-  margin-right: calc(4px + 0.5rem);
-  margin-left: 0.5rem;
+  margin-left: auto;
 }
 
 .sidebar {
@@ -242,7 +249,6 @@ body {
   }
 }
 .editor .nav {
-  display: flex;
   flex-direction: column;
   width: min-content;
 }
@@ -296,6 +302,11 @@ body {
   background-color: transparent;
   border: 1px solid #1f2041;
   color: #1f2041;
+}
+
+.divider {
+  margin: 0.25rem 0;
+  opacity: 0.8;
 }
 
 /*# sourceMappingURL=main.css.map */
