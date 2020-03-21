@@ -1,0 +1,23 @@
+.editor {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-gap: 0.5rem;
+  @include mobile-only {
+    grid-template-columns: auto;
+    justify-items: flex-end;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    width: min-content;
+
+    @include mobile-only {
+      flex-direction: row;
+    }
+
+    &__link {
+      margin: 5px;
+    }
+  }
+}

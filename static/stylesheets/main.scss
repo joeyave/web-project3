@@ -18,12 +18,12 @@
 '5-layout/navbar',
 '5-layout/sidebar',
 '5-layout/footer',
-'5-layout/form';
+'5-layout/form',
+"5-layout/editor";
 
 // 5. Components
 @import '4-components/button',
-'4-components/input',
 '4-components/icon',
-'4-components/file_input_field';
+'4-components/custom-file-input';
 
 // 6. Page-specific styles
