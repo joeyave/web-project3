@@ -1,0 +1,15 @@
+.nav {
+  width: 100%;
+  display: inline;
+
+  &__link {
+    font-size: 1rem;
+    margin: 0 0.5rem;
+
+    &--right {
+      float: right;
+      margin-right: calc(4px + 0.5rem);
+      margin-left: 0.5rem;
+    }
+  }
+}

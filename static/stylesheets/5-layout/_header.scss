@@ -1,0 +1,64 @@
+.header {
+  background-color: $color-primary;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+
+  @include mobile-only {
+    display: block;
+  }
+
+  &__logo {
+    color: white;
+    margin-right: 1rem;
+    @include mobile-only {
+      display: inline;
+    }
+  }
+
+  .nav {
+    @include mobile-only {
+      display: none;
+    }
+
+    &__link {
+      @include mobile-only {
+        display: block;
+        padding: 0.5rem 0;
+        margin: 0;
+        float: none;
+
+        &:first-child {
+          margin-top: 1rem;
+        }
+      }
+    }
+
+    &--active {
+      display: block;
+    }
+  }
+
+  &__toggle {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+    margin-left: auto;
+
+    display: none;
+    @include mobile-only {
+      display: block;
+      float: right;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+      color: $color5;
+    }
+  }
+}

@@ -2,33 +2,28 @@
 
 // 1. Configuration and helpers
 @import
-'abstracts/variables',
-'abstracts/functions',
-'abstracts/mixins';
+'1-utils/variables',
+'1-utils/mixins';
 
 // 2. Vendors
 
 // 3. Base stuff
-@import
-'base/base',
-'base/fonts',
-'base/typography',
-'base/helpers';
+@import '3-base/base',
+'3-base/typography',
+'3-base/helpers';
 
 // 4. Layout-related sections
-@import
-'layout/grid_body',
-'layout/grid_form',
-'layout/form',
-
-'layout/navbar',
-'layout/footer';
+@import '5-layout/wrapper',
+'5-layout/header',
+'5-layout/navbar',
+'5-layout/sidebar',
+'5-layout/footer',
+'5-layout/form';
 
 // 5. Components
-@import
-'components/button',
-'components/input',
-'components/icon';
+@import '4-components/button',
+'4-components/input',
+'4-components/icon',
+'4-components/file_input_field';
 
 // 6. Page-specific styles
-@import 'pages/add_blog_post';

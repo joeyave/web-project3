@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,30 +13,30 @@
 </head>
 <body>
 <div class="wrapper">
-    <nav class="navbar">
-        {# Nav logo #}
-        <a class="nav-logo" href="#">Josef</a>
 
-        {#  icon  #}
-        <span class="icon nav-toggle" id="nav-toggle"><i class="fas fa-bars"></i></span>
+    <header class="header">
+        <h1 class="header__logo"><a href="/">Josef</a></h1>
 
-        {# Main nav #}
-        <div class="nav-links" id="nav-links">
-            <a class="nav-item" href="#">Home</a>
-            <a class="nav-item" href="#">Blog</a>
-            <a class="nav-item" href="#">Contacts</a>
-            <a class="nav-item" href="#">About</a>
+        <span class="header__toggle" id="nav-toggle"><i class="fas fa-bars"></i></span>
 
-            {% if session.user_id %}
-                <a class="nav-item push-right" href="{{ url_for('logout') }}">Log Out</a>
-                <a class="nav-item" href="{{ url_for('add_blog_post') }}">Add blog post</a>
-                <a class="nav-item nav-username" href="#">{{ session.username }}</a>
-            {% else %}
-                <a class="nav-item push-right" href="{{ url_for('registration') }}">Registration</a>
-                <a class="nav-item" href="{{ url_for('login') }}">Log In</a>
-            {% endif %}
-        </div>
-    </nav>
+        <nav class="nav" id="nav">
+            <ul>
+                <a class="nav__link" href="#">Home</a>
+                <a class="nav__link" href="{{ url_for('blog') }}">Blog</a>
+                <a class="nav__link" href="#">Contacts</a>
+                <a class="nav__link" href="#">About</a>
+
+                {% if session.user_id %}
+                    <a class="nav__link nav__link--right" href="#">{{ session.username }}</a>
+                    <a class="nav__link nav__link--right" href="{{ url_for('add_blog_post') }}">Add blog post</a>
+                    <a class="nav__link nav__link--right" href="{{ url_for('logout') }}">Log Out</a>
+                {% else %}
+                    <a class="nav__link nav__link--right" href="{{ url_for('registration') }}">Registration</a>
+                    <a class="nav__link nav__link--right" href="{{ url_for('login') }}">Log In</a>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
 
     <div class="container sidebar">{% block sidebar %}Sidebar TODO{% endblock %}</div>
     <div class="container content">{% block content %}{% endblock %}</div>

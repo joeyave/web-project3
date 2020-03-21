@@ -2,14 +2,21 @@
 // This file contains all application-wide Sass variables.
 // -----------------------------------------------------------------------------
 
+// Variables
+$color-primary: rgba(31, 32, 65, 1);
+$color-secondary: rgba(75, 63, 114, 1);
 
-/// Regular font family
-/// @type List
-$text-font-stack: 'Roboto Mono', monospace;
-$text-color: black;
-$button-text-color: white;
+$color-invalid: red;
+$color-valid: green;
 
+$heading-shadow-size: .55rem;
+$layout-margin: 6rem;
+$grid-gutter: $layout-margin * .25;
+
+
+$grid-gutter: 1rem;
 $border: 1px solid #cccccc;
+$border-radius: 4px;
 
 $color1: rgba(31, 32, 65, 1);
 $color2: rgba(75, 63, 114, 1);
@@ -24,8 +31,6 @@ $max-width: 1180px !default;
 
 
 /// Breakpoints map
-/// @prop {String} keys - Keys are identifiers mapped to a given length
-/// @prop {Map} values - Values are actual breakpoints expressed in pixels
-$breakpoint-phone: 640px !default;
-$breakpoint-tablet: 768px !default;
-$breakpoint-desktop: 1024px !default;
+$breakpoints: (
+        mobile: 768px
+) !default;

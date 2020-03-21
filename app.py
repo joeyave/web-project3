@@ -53,10 +53,10 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/blogs')
-def blogs():
-    blogs = db.execute("SELECT * FROM blogs ORDER by blog_id DESC ").fetchall()
-    return render_template('blogs.html', blogs=blogs)
+@app.route('/blog')
+def blog():
+    blog_posts = db.execute("SELECT * FROM blogs ORDER by blog_id DESC ").fetchall()
+    return render_template('blog.html', blog_posts=blog_posts)
 
 
 @app.route("/blogs/<int:blog_id>")

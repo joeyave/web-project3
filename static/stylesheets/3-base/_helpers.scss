@@ -1,0 +1,17 @@
+// -----------------------------------------------------------------------------
+// This file contains CSS helper classes.
+// -----------------------------------------------------------------------------
+
+.container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}
