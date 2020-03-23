@@ -70,6 +70,7 @@ def get_blog(blog_id):
     soup = BeautifulSoup(markdown(blog_post['blog_text']))
     h1_left_align(soup)
     responsive_images(soup)
+    remove_scripts(soup)
 
     # https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2
     soup = Markup(soup)
