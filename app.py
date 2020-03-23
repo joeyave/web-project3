@@ -57,13 +57,13 @@ def index():
 
 @app.route('/blog')
 def blog():
-    blog_posts = db.execute("SELECT * FROM blogs ORDER by blog_id DESC ").fetchall()
+    blog_posts = db.execute("SELECT * FROM blog_posts ORDER by blog_id DESC ").fetchall()
     return render_template('blog.html', blog_posts=blog_posts)
 
 
 @app.route("/blogs/<int:blog_id>")
 def get_blog(blog_id):
-    blog = db.execute("select * from blogs join users on users.user_id = blog_user_id where blog_id = :blog_id",
+    blog = db.execute("select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
                       {"blog_id": blog_id}).fetchone()
 
     soup = BeautifulSoup(markdown(blog['blog_description']))
@@ -97,7 +97,7 @@ def registration():
                           {"username": request.form.get("username")}).fetchone()
 
         if user is None:
-            db.execute("INSERT INTO users (firstname, lastname, username, password) VALUES (:f, :l, :u, :p)",
+            db.execute("INSERT INTO users (first_name, last_name, username, password) VALUES (:f, :l, :u, :p)",
                        {"f": request.form.get("firstname"),
                         "l": request.form.get("lastname"),
                         "u": request.form.get("username"),
@@ -149,11 +149,11 @@ def add_blog_post():
     if request.method == "POST":
         if session.get('user_id'):
             db.execute(
-                "INSERT INTO blogs (blog_title, blog_description, blog_user_id, blog_date) "
-                "VALUES (:bt, :bd, :bui, current_date)",
+                "INSERT INTO blog_posts (blog_title, blog_text, blog_user_id, blog_date) "
+                "VALUES (:bt, :btext, :bui, current_date)",
                 {"bt": request.form.get("blog_title"),
                  # Markdown to HTML.
-                 "bd": request.form.get("blog_post"),
+                 "btext": request.form.get("blog_post"),
                  "bui": session.get("user_id")})
             db.commit()
 
