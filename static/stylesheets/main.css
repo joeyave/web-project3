@@ -11,8 +11,9 @@ html, body {
   height: 100%;
 }
 
-h1 {
+h1, h2, h3 {
   text-align: center;
+  margin: 1rem 0;
 }
 
 a:hover {
@@ -84,7 +85,7 @@ body {
 }
 .header__logo {
   color: white;
-  margin-right: 1rem;
+  margin: 0 1rem 0 0;
 }
 @media screen and (max-width: 768px) {
   .header__logo {
@@ -296,6 +297,31 @@ body {
   font-size: 2rem;
   font-weight: bold;
 }
+.blog-post__credits {
+  font-weight: lighter;
+}
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 2vmin;
+  list-style: none;
+}
+.gallery__image {
+  height: 40vh;
+  flex-grow: 1;
+  margin: 2vmin;
+}
+.gallery__image img {
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  vertical-align: bottom;
+  border-radius: 1vmin;
+}
+.gallery__image:last-child {
+  flex-grow: 10;
+}
+
 .button {
   background-color: #1f2041;
   color: white;

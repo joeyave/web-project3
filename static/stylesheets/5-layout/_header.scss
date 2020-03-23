@@ -11,7 +11,7 @@
 
   &__logo {
     color: white;
-    margin-right: 1rem;
+    margin: 0 1rem 0 0;
     @include mobile-only {
       display: inline;
     }
