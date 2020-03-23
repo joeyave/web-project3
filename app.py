@@ -8,6 +8,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from markdown import markdown
+from lxml.html.clean import clean_html
 
 from flask import Markup
 from werkzeug.utils import secure_filename
@@ -23,7 +24,6 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 bcrypt = Bcrypt(app)
-
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -67,10 +67,11 @@ def get_blog(blog_id):
         "select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
         {"blog_id": blog_id}).fetchone()
 
-    soup = BeautifulSoup(markdown(blog_post['blog_text']))
+    blog_text_html = markdown(blog_post['blog_text'])
+    blog_text_html = clean_html(blog_text_html)
+    soup = BeautifulSoup(blog_text_html)
     h1_left_align(soup)
     responsive_images(soup)
-    remove_scripts(soup)
 
     # https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2
     soup = Markup(soup)
