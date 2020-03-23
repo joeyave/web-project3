@@ -7,7 +7,8 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <script data-ad-client="ca-pub-1004561806649499" async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     {% block head %}
     {% endblock %}
 </head>
@@ -40,7 +41,7 @@
         </nav>
     </header>
 
-    <div class="container sidebar">{% block sidebar %}Sidebar TODO{% endblock %}</div>
+    <div class="container sidebar">{% block sidebar %}{% endblock %}</div>
     <div class="container content">{% block content %}{% endblock %}</div>
 
     <div class="footer">

@@ -3,13 +3,16 @@
 {% block title %}Blog{% endblock %}
 
 {% block content %}
-    <h1>Explore recent posts about fashion and style!</h1>
-
     <div class="container">
+        <h1>Explore recent posts about fashion and style!</h1>
+
         {% for blog_post in blog_posts %}
-            <a class="blog-link" href="/blog_posts/{{ blog_post['blog_id'] }}">
+            <a class="blog-link" href="/blog/{{ blog_post['blog_id'] }}">
                 <div class="blog-link__title">{{ blog_post['blog_title'] }}</div>
                 <div class="blog-link__date">{{ blog_post['blog_date'] }}</div>
+
+{#              https://stackoverflow.com/questions/30747119/does-jinja2-have-filter-help-show-only-part-of-variable-in-browser#}
+                <div class="blog-link__description">{{ blog_post['blog_text'] | truncate(200) }}</div>
             </a>
         {% endfor %}
     </div>

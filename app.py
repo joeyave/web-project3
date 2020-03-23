@@ -61,18 +61,19 @@ def blog():
     return render_template('blog.html', blog_posts=blog_posts)
 
 
-@app.route("/blogs/<int:blog_id>")
+@app.route("/blog/<int:blog_id>")
 def get_blog(blog_id):
-    blog = db.execute("select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
-                      {"blog_id": blog_id}).fetchone()
+    blog_post = db.execute(
+        "select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
+        {"blog_id": blog_id}).fetchone()
 
-    soup = BeautifulSoup(markdown(blog['blog_description']))
+    soup = BeautifulSoup(markdown(blog_post['blog_text']))
     h1_left_align(soup)
     responsive_images(soup)
 
     # https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2
     soup = Markup(soup)
-    return render_template("blog.html", blog=blog, soup=soup)
+    return render_template("blog_post.html", blog_post=blog_post, soup=soup)
 
 
 @app.route('/registration', methods=["GET", "POST"])

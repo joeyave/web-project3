@@ -29,7 +29,6 @@ body {
 }
 
 .container {
-  display: flex;
   justify-content: space-around;
   width: 100%;
   padding: 0 1rem;
@@ -152,10 +151,6 @@ body {
   margin-left: auto;
 }
 
-.sidebar {
-  background-color: #d0ceba;
-}
-
 .footer {
   background-color: #1f2041;
   padding: 1rem 1.5rem;
@@ -163,15 +158,12 @@ body {
 }
 
 .form {
-  width: 50%;
-}
-@media screen and (max-width: 768px) {
-  .form {
-    width: 80%;
-  }
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
 .form--full-width {
-  width: 100%;
+  max-width: 100%;
 }
 .form__heading {
   text-align: center;
@@ -219,6 +211,12 @@ body {
 .form__field__message {
   text-align: center;
   display: none;
+  grid-column: 2/3;
+}
+@media screen and (max-width: 768px) {
+  .form__field__message {
+    grid-column: 1/2;
+  }
 }
 .form__field__message--invalid {
   color: red;
@@ -261,6 +259,43 @@ body {
   margin: 5px;
 }
 
+.blog-link {
+  border: 1px solid #1f2041;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-areas: "title date" "description description";
+  grid-gap: 1rem;
+  text-decoration: none;
+  color: black;
+}
+.blog-link__title {
+  font-size: 1.5rem;
+  grid-area: title;
+}
+.blog-link__date {
+  justify-self: flex-end;
+  grid-area: date;
+}
+.blog-link__description {
+  grid-area: description;
+}
+.blog-link:hover {
+  color: black;
+  transform: scale(1.02);
+}
+
+.blog-post {
+  display: grid;
+  grid-gap: 1rem;
+}
+.blog-post__title {
+  justify-self: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
 .button {
   background-color: #1f2041;
   color: white;

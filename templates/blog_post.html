@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ blog_post['blog_title'] }}
+{% endblock %}
+
+{% block content %}
+    <div class="blog-post">
+        <div class="blog-post__title">{{ blog_post['blog_title'] }}</div>
+        <div class="blog-post__credits">
+            Written by {{ blog_post['firstname'] }} {{ blog_post['lastname'] }} -
+            <i>{{ blog_post['username'] }}</i> | {{ blog_post.blog_date }}
+        </div>
+        <div class="blog-post__text">
+            {{ soup }}
+        </div>
+    </div>
+
+{% endblock %}

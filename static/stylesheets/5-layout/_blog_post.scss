@@ -1,0 +1,18 @@
+.blog-post {
+  display: grid;
+  grid-gap: 1rem;
+
+  &__title {
+    justify-self: center;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  &__credits {
+
+  }
+
+  &__text {
+
+  }
+}
