@@ -306,10 +306,21 @@ body {
   margin: 2vmin;
   list-style: none;
 }
+.gallery:after {
+  content: "";
+  display: block;
+  flex-grow: 10;
+}
 .gallery__image {
   height: 40vh;
   flex-grow: 1;
   margin: 2vmin;
+}
+@media screen and (max-width: 768px) {
+  .gallery__image {
+    height: auto;
+    width: 100%;
+  }
 }
 .gallery__image img {
   max-height: 100%;
@@ -318,8 +329,12 @@ body {
   vertical-align: bottom;
   border-radius: 1vmin;
 }
-.gallery__image:last-child {
-  flex-grow: 10;
+@media screen and (max-width: 768px) {
+  .gallery__image img {
+    width: 100%;
+    max-height: 75vh;
+    min-width: 0;
+  }
 }
 
 .button {
