@@ -12,6 +12,8 @@
   text-decoration: none;
   color: black;
 
+  word-break: break-word;
+
   &__title {
     font-size: 1.5rem;
     grid-area: title;
@@ -20,6 +22,7 @@
   &__date {
     justify-self: flex-end;
     grid-area: date;
+    word-break: keep-all;
   }
 
   &__description {

@@ -271,6 +271,7 @@ body {
   grid-gap: 1rem;
   text-decoration: none;
   color: black;
+  word-break: break-word;
 }
 .blog-link__title {
   font-size: 1.5rem;
@@ -279,6 +280,7 @@ body {
 .blog-link__date {
   justify-self: flex-end;
   grid-area: date;
+  word-break: keep-all;
 }
 .blog-link__description {
   grid-area: description;
