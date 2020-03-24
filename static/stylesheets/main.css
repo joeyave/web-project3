@@ -26,17 +26,7 @@ a:hover {
 body {
   color: black;
   font-family: "Roboto Mono", monospace;
-  font-size: 14px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-wrap: break-word;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+  font-size: 16px;
 }
 
 .container {
@@ -281,6 +271,16 @@ body {
   grid-gap: 1rem;
   text-decoration: none;
   color: black;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-wrap: break-word;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 .blog-link__title {
   font-size: 1.5rem;

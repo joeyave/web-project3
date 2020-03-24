@@ -69,7 +69,7 @@ def get_blog(blog_id):
 
     blog_text_html = markdown(blog_post['blog_text'])
     blog_text_html = clean_html(blog_text_html)
-    soup = BeautifulSoup(blog_text_html)
+    soup = BeautifulSoup(blog_text_html, features="lxml")
     h1_left_align(soup)
     responsive_images(soup)
 
