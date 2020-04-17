@@ -170,6 +170,7 @@ def comment(data):
                                       {
                                           "ci": inserted_comment['comment_id']
                                       })
+        db.remove()
 
         # use special handler for dates and decimals
         inserted_comment = json.loads(json.dumps([dict(row) for row in inserted_comment], default=alchemyencoder))

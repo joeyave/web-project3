@@ -19,12 +19,16 @@
     {# Comments #}
     <div class="comments-section">
         <hr class="divider divider--wide">
+        {% if session.user_id %}
         <form class="form" id="comment-form">
             <div class="form__field">
                 <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>
             </div>
             <button class="button" type="submit">Comment</button>
         </form>
+        {% else %}
+            You have to log in first to leave a comment.
+        {% endif %}
         <hr class="divider divider--wide">
 
         <div class="comments-section__comments" id="comments">
