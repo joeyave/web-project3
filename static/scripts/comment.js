@@ -2,7 +2,7 @@ const comment_template = Handlebars.compile(document.querySelector('#comment-tem
 const reply_form_template = Handlebars.compile(document.querySelector('#reply-form-template').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderComments(commentsArray);
+    renderComments();
 
     var forms = document.querySelectorAll('form');
     var replyButtons = document.querySelectorAll('#reply');
@@ -37,10 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function renderComments(commentsArray) {
-    for (const commentData of commentsArray) {
-        renderComment(commentData);
-    }
+function renderComments() {
+    fetch(`${window.location}/load_comments`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({"blog_id": blogPostId}),
+        cache: "no-cache",
+        headers: new Headers({
+            "content-type": "application/json"
+        })
+    }).then(function (response) {
+
+        if (response.status !== 200) {
+            console.log(`Response status was not 200: ${response.status}`);
+            return;
+        }
+
+        response.json().then(function (data) {
+            for (const commentData of data) {
+                renderComment(commentData);
+            }
+        })
+    })
 }
 
 function renderComment(commentData) {

@@ -87,6 +87,14 @@ def get_blog(blog_id):
     # https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2
     soup = Markup(soup)
 
+    return render_template("blog_post.html", blog_post=blog_post, soup=soup)
+
+
+@app.route("/blog/<int:blog_id>/load_comments", methods=["POST"])
+def load_comments(blog_id):
+    req = request.get_json()
+    print(req)
+
     comments = db.execute(
         "select * from comments join users on users.user_id = comment_user_id "
         "where comment_blog_post_id = :blog_id order by thread_timestamp, comment_path",
@@ -98,7 +106,9 @@ def get_blog(blog_id):
     comments = json.loads(json.dumps([dict(row) for row in comments], default=alchemyencoder))
     for comment in comments:
         comment['parent_path'] = "_".join(comment['comment_path'].split('_')[:-1])
-    return render_template("blog_post.html", blog_post=blog_post, soup=soup, comments=comments)
+    comments = json.dumps(comments)
+    
+    return make_response(comments, 200)
 
 
 @socketio.on("submit comment")
