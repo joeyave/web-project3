@@ -30,20 +30,6 @@
         <div class="comments-section__comments" id="comments">
         </div>
     </div>
-
-{#    <hr class="divider divider--wide">#}
-{##}
-{#    <form class="form" id="comment-form">#}
-{#        <div class="form__field">#}
-{#            <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>#}
-{#        </div>#}
-{#        <input class="button" type="submit" value="Submit">#}
-{#    </form>#}
-{##}
-{#    <hr class="divider divider--wide" id="comments-divider">#}
-{##}
-{#    <div class="comments" id="comments">#}
-{#    </div>#}
 {% endblock %}
 
 {% block body %}
@@ -74,8 +60,8 @@
 
     <script>
         // Render comments.
-        const commentsArray = JSON.parse('{{ comments | tojson }}');
-        const blogPostId = parseInt({{ blog_post['blog_id'] }});
+        const commentsArray = JSON.parse('{{ comments | tojson | safe }}');
+        const blogPostId = parseInt({{ blog_post['blog_id'] | safe }});
     </script>
 
     <script src="{{ url_for('static', filename='scripts/comment.js') }}"></script>
