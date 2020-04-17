@@ -373,16 +373,6 @@ body {
   grid-column: 1/2;
 }
 
-.comment {
-  margin-bottom: 1rem;
-}
-.comment__text {
-  margin: 0.5rem;
-}
-.comment__footer .button {
-  padding: 0.25rem;
-}
-
 .button {
   background-color: #1f2041;
   color: white;
@@ -444,6 +434,27 @@ body {
 }
 .divider--wide {
   margin: 2rem 0;
+}
+
+.comment {
+  margin-bottom: 1rem;
+}
+.comment__text {
+  margin: 0.5rem;
+}
+.comment__footer > .button {
+  padding: 0.25rem;
+}
+.comment__footer .form {
+  margin: 0.5rem 0;
+}
+.comment__footer .form .button {
+  padding: 0.5rem;
+}
+@media screen and (max-width: 768px) {
+  .comment__footer .form .button {
+    margin-top: 0.5rem;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

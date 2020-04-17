@@ -23,10 +23,9 @@
             <div class="form__field">
                 <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>
             </div>
-            <input class="button" type="submit" value="Comment">
+            <button class="button" type="submit">Comment</button>
         </form>
         <hr class="divider divider--wide">
-
 
         <div class="comments-section__comments" id="comments">
         </div>
@@ -68,7 +67,7 @@
                     <textarea name="comment-text" id="comment-text" rows="3" tabindex="4"
                               required>{{ reply_to }}, </textarea>
                 </div>
-                <input class="button" type="submit" value="Submit">
+                <button class="button" type="submit">Reply</button>
             </form>
         </script>
     {% endraw %}
