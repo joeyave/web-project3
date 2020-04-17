@@ -1,3 +1,11 @@
 // -----------------------------------------------------------------------------
 // This file contains all application-wide Sass functions.
 // -----------------------------------------------------------------------------
+
+@function lightness-shift($color) {
+  @if (lightness($color) < 25%) {
+    @return lighten($color, 10%);
+  } @else {
+    @return darken($color, 10%)
+  }
+}

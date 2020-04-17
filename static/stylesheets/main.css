@@ -29,6 +29,13 @@ body {
   font-size: 16px;
 }
 
+.comment {
+  font-size: 0.75rem;
+}
+.comment__text {
+  font-size: 0.9rem;
+}
+
 .container {
   justify-content: space-around;
   width: 100%;
@@ -169,7 +176,6 @@ body {
 .form__heading {
   text-align: center;
   padding-bottom: 1rem;
-  font-size: 2rem;
 }
 .form__field {
   width: 100%;
@@ -199,6 +205,7 @@ body {
   }
 }
 .form__field > input, .form__field textarea {
+  resize: vertical;
   grid-column: 2/3;
   width: 100%;
   padding: 12px;
@@ -348,6 +355,34 @@ body {
   }
 }
 
+.comments-section {
+  width: 100%;
+}
+.comments-section .form {
+  margin: 0 auto;
+}
+.comments-section .form__field {
+  grid-template-columns: 1fr;
+}
+.comments-section .form__field > label {
+  grid-column: 1/2;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.comments-section .form__field > textarea {
+  grid-column: 1/2;
+}
+
+.comment {
+  margin-bottom: 1rem;
+}
+.comment__text {
+  margin: 0.5rem;
+}
+.comment__footer .button {
+  padding: 0.25rem;
+}
+
 .button {
   background-color: #1f2041;
   color: white;
@@ -358,6 +393,18 @@ body {
 }
 .button--full-width {
   width: 100%;
+}
+.button--outline {
+  border: 0.1rem solid #1f2041;
+  background-color: white;
+  color: black;
+}
+.button--transparent {
+  background-color: white;
+  color: black;
+}
+.button--transparent:hover {
+  background-color: #e6e6e6;
 }
 
 .icon {
@@ -394,6 +441,9 @@ body {
 .divider {
   margin: 0.25rem 0;
   opacity: 0.8;
+}
+.divider--wide {
+  margin: 2rem 0;
 }
 
 /*# sourceMappingURL=main.css.map */

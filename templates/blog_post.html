@@ -16,4 +16,68 @@
         </div>
     </div>
 
+    {# Comments #}
+    <div class="comments-section">
+        <hr class="divider divider--wide">
+        <form class="form" id="comment-form">
+            <div class="form__field">
+                <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>
+            </div>
+            <input class="button" type="submit" value="Comment">
+        </form>
+        <hr class="divider divider--wide">
+
+
+        <div class="comments-section__comments" id="comments">
+        </div>
+    </div>
+
+{#    <hr class="divider divider--wide">#}
+{##}
+{#    <form class="form" id="comment-form">#}
+{#        <div class="form__field">#}
+{#            <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>#}
+{#        </div>#}
+{#        <input class="button" type="submit" value="Submit">#}
+{#    </form>#}
+{##}
+{#    <hr class="divider divider--wide" id="comments-divider">#}
+{##}
+{#    <div class="comments" id="comments">#}
+{#    </div>#}
+{% endblock %}
+
+{% block body %}
+    {% raw -%}
+        <script id="comment-template" type="text/x-handlebars-template">
+            <div class="comment" id="{{ comment_id }}">
+                <span class="comment__author" id="comment_author">{{ comment_author }}</span> /
+                <span class="comment__date">{{ comment_timestamp }}</span>
+
+                <div class="comment__text">{{ comment_text }}</div>
+
+                <div class="comment__footer" id="comment_footer">
+                    <button class="button button--transparent" id="reply">Reply</button>
+                </div>
+            </div>
+        </script>
+
+        <script id="reply-form-template" type="text/x-handlebars-template">
+            <form class="form" id="reply-form">
+                <div class="form__field">
+                    <textarea name="comment-text" id="comment-text" rows="3" tabindex="4"
+                              required>{{ reply_to }}, </textarea>
+                </div>
+                <input class="button" type="submit" value="Submit">
+            </form>
+        </script>
+    {% endraw %}
+
+    <script>
+        // Render comments.
+        const commentsArray = JSON.parse('{{ comments | tojson }}');
+        const blogPostId = parseInt({{ blog_post['blog_id'] }});
+    </script>
+
+    <script src="{{ url_for('static', filename='scripts/comment.js') }}"></script>
 {% endblock %}

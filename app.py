@@ -1,3 +1,5 @@
+import datetime
+import decimal
 import os
 import requests
 from soup_functions import *
@@ -12,6 +14,7 @@ from lxml.html.clean import clean_html
 
 from flask import Markup
 from werkzeug.utils import secure_filename
+from flask_socketio import SocketIO, emit
 
 # https://coderbook.com/@marcus/how-to-render-markdown-syntax-as-html-using-python/
 from bs4 import BeautifulSoup
@@ -24,6 +27,8 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 bcrypt = Bcrypt(app)
+socketio = SocketIO(app)
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -35,8 +40,8 @@ def uploaded_file(filename):
 
 
 # Check for environment variable
-# if not os.getenv("DATABASE_URL"):
-#     raise RuntimeError("DATABASE_URL is not set")
+if not os.getenv("DATABASE_URL"):
+    raise RuntimeError("DATABASE_URL is not set")
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
@@ -45,9 +50,15 @@ Session(app)
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
-# engine = create_engine(
-#     "postgres://boqyxxkgziqwvp:1da49940138d6b0b7d730d9c31863551afdad524198814e997dc4438fae6ab82@ec2-34-200-116-132.compute-1.amazonaws.com:5432/dcd1iguaiog2m3")
 db = scoped_session(sessionmaker(bind=engine))
+
+
+def alchemyencoder(obj):
+    """JSON encoder function for SQLAlchemy special classes."""
+    if isinstance(obj, datetime.date):
+        return obj.isoformat()
+    elif isinstance(obj, decimal.Decimal):
+        return float(obj)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -57,25 +68,106 @@ def index():
 
 @app.route('/blog')
 def blog():
-    blog_posts = db.execute("SELECT * FROM blog_posts ORDER by blog_id DESC ").fetchall()
+    blog_posts = db.execute("SELECT * FROM blog_posts ORDER by blog_id DESC").fetchall()
     return render_template('blog.html', blog_posts=blog_posts)
 
 
-@app.route("/blog/<int:blog_id>")
+@app.route("/blog/<int:blog_id>", methods=["GET", "POST"])
 def get_blog(blog_id):
     blog_post = db.execute(
         "select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
         {"blog_id": blog_id}).fetchone()
 
     blog_text_html = markdown(blog_post['blog_text'])
+    # Clean from all js injections.
     blog_text_html = clean_html(blog_text_html)
     soup = BeautifulSoup(blog_text_html, features="lxml")
     h1_left_align(soup)
     responsive_images(soup)
-
     # https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2
     soup = Markup(soup)
-    return render_template("blog_post.html", blog_post=blog_post, soup=soup)
+
+    comments = db.execute(
+        "select * from comments join users on users.user_id = comment_user_id "
+        "where comment_blog_post_id = :blog_id order by thread_timestamp, comment_path",
+        {
+            "blog_id": blog_id
+        }
+    )
+
+    comments = json.loads(json.dumps([dict(row) for row in comments], default=alchemyencoder))
+    for comment in comments:
+        comment['parent_path'] = "_".join(comment['comment_path'].split('_')[:-1])
+    return render_template("blog_post.html", blog_post=blog_post, soup=soup, comments=comments)
+
+
+@socketio.on("submit comment")
+def comment(data):
+    _N = 6
+
+    if session.get("user_id"):
+        try:
+            parent_id = int(data['parent_path'].split('_')[-1])
+        except ValueError:
+            parent_id = ""
+
+        inserted_comment = db.execute(
+            "insert into comments "
+            "(comment_text, comment_date, comment_user_id, comment_parent_id, comment_blog_post_id) "
+            "values (:ct, current_timestamp, :cui, :cpi, :cbpi) returning *",
+            {
+                "ct": data['comment_text'],
+                "cui": session.get("user_id"),
+                "cpi": parent_id,
+                "cbpi": data['blog_id']
+            }
+        ).fetchone()
+
+        prefix = data['parent_path'] + '_' if parent_id else ''
+        comment_path = prefix + '{:0{}d}'.format(inserted_comment['comment_id'], _N)
+        comment_level = len(comment_path) // _N - 1
+
+        if comment_level > 0:
+            parent_comment = db.execute(
+                "select * from comments where comment_id = :parent_id",
+                {
+                    "parent_id": parent_id
+                }
+            ).fetchone()
+            thread_timestamp = parent_comment['comment_date']
+        else:
+            thread_timestamp = inserted_comment['comment_date']
+            parent_comment = inserted_comment
+
+        inserted_comment = db.execute(
+            "update comments "
+            "set comment_path = :cp, comment_level = :cl, thread_timestamp = :tt "
+            "where comment_id = :ci returning *",
+            {
+                "ci": inserted_comment['comment_id'],
+
+                "cp": comment_path,
+                "cl": comment_level,
+                "tt": thread_timestamp
+            }
+        ).fetchone()
+        db.commit()
+
+        inserted_comment = db.execute("select * "
+                                      "from comments "
+                                      "join users on comment_user_id = users.user_id "
+                                      "where comment_id = :ci",
+                                      {
+                                          "ci": inserted_comment['comment_id']
+                                      })
+
+        # use special handler for dates and decimals
+        inserted_comment = json.loads(json.dumps([dict(row) for row in inserted_comment], default=alchemyencoder))
+        inserted_comment = inserted_comment[0]
+        inserted_comment["comment_level"] = comment_level
+        inserted_comment["parent_path"] = parent_comment["comment_path"]
+
+        emit("announce comment", inserted_comment, broadcast=True)
 
 
 @app.route('/registration', methods=["GET", "POST"])
@@ -182,4 +274,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)

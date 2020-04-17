@@ -13,4 +13,20 @@
   &--full-width {
     width: 100%;
   }
+
+  &--outline {
+    @include border();
+    background-color: white;
+    color: black;
+  }
+
+  &--transparent {
+    background-color: white;
+    color: black;
+
+    &:hover {
+      background-color: darken(white, 10%);
+    }
+  }
+
 }

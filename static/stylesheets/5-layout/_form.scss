@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  
+
   &--full-width {
     max-width: 100%;
   }
@@ -10,7 +10,6 @@
   &__heading {
     text-align: center;
     padding-bottom: 1rem;
-    font-size: 2rem;
   }
 
   &__field {
@@ -41,6 +40,8 @@
     }
 
     > input, textarea {
+      resize: vertical;
+
       grid-column: 2 / 3;
       width: 100%;
       padding: 12px;
