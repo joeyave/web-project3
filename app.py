@@ -102,6 +102,7 @@ def load_comments(blog_id):
             "blog_id": blog_id
         }
     )
+    db.remove()
 
     comments = json.loads(json.dumps([dict(row) for row in comments], default=alchemyencoder))
     for comment in comments:
