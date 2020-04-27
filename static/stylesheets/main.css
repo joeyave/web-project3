@@ -23,17 +23,23 @@ a:hover {
 /**
  * Basic typography style for copy text
  */
-body {
-  color: black;
+* {
   font-family: "Roboto Mono", monospace;
+}
+
+body {
+  font-size: 16px;
+}
+
+input, textarea, select {
   font-size: 16px;
 }
 
 .comment {
-  font-size: 0.75rem;
+  font-size: 12px;
 }
 .comment__text {
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .container {
@@ -159,6 +165,16 @@ body {
   margin-left: auto;
 }
 
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
+.sidebar .comment:hover {
+  cursor: pointer;
+  color: rgba(120, 113, 101, 0.85);
+}
+
 .footer {
   background-color: #1f2041;
   padding: 1rem 1.5rem;
@@ -195,7 +211,6 @@ body {
   grid-column: 1/2;
   display: block;
   text-align: center;
-  font-size: 1rem;
 }
 @media screen and (max-width: 768px) {
   .form__field > label {

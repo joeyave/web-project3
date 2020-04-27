@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: min-content auto;
   grid-gap: 0.5rem;
+
   @include mobile-only {
     grid-template-columns: auto;
     justify-items: flex-end;

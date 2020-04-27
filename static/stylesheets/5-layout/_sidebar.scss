@@ -1,2 +1,12 @@
 .sidebar {
+  @include mobile-only() {
+    display: none;
+  }
+
+  .comment {
+    &:hover {
+      cursor: pointer;
+      color: rgba(120, 113, 101, 0.85);
+    }
+  }
 }

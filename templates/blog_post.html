@@ -20,12 +20,12 @@
     <div class="comments-section">
         <hr class="divider divider--wide">
         {% if session.user_id %}
-        <form class="form" id="comment-form">
-            <div class="form__field">
-                <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>
-            </div>
-            <button class="button" type="submit">Comment</button>
-        </form>
+            <form class="form" id="comment-form">
+                <div class="form__field">
+                    <textarea name="comment-text" id="comment-text" rows="5" tabindex="4" required></textarea>
+                </div>
+                <button class="button" type="submit">Comment</button>
+            </form>
         {% else %}
             You have to log in first to leave a comment.
         {% endif %}
@@ -64,7 +64,7 @@
 
     <script>
         // Render comments.
-        const blogPostId = parseInt({{ blog_post['blog_id'] | safe }});
+        const blogPostId = parseInt({{blog_post['blog_id'] | safe }});
     </script>
 
     <script src="{{ url_for('static', filename='scripts/comment.js') }}"></script>

@@ -3,55 +3,55 @@
 {% block title %}Registration{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <form action="{{ url_for('registration') }}" method="POST" class="form" id="registration-form">
+<div class="container">
+    <form action="{{ url_for('registration') }}" method="POST" class="form" id="registration-form">
 
-            <h1 class="form__heading">Registration</h1>
+        <h1 class="form__heading">Registration</h1>
 
-            <div class="form__field">
-                <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="firstname" placeholder="Your name..">
+        <div class="form__field">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="firstname" placeholder="Your name..">
+        </div>
+
+        <div class="form__field">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="lastname" placeholder="Your last name..">
+        </div>
+
+        <div class="form__field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username..">
+        </div>
+
+        <div class="form__field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                   placeholder="Password.."
+                   title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+
+            <div class="form__field__message" id="password-validation-message">
+                <p>Password must contain the following:</p>
+                <p id="letter">A lowercase letter</p>
+                <p id="capital">A capital letter</p>
+                <p id="number">A number</p>
+                <p id="length">Minimum 8 characters</p>
             </div>
+        </div>
 
-            <div class="form__field">
-                <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="lastname" placeholder="Your last name..">
+        <div class="form__field">
+            <label for="password-confirm">Confirm password</label>
+            <input type="password" id="password-confirm" name="password_confirm" placeholder="Password..">
+
+            <div class="form__field__message form__field__message--invalid" id="password-confirm-message">
+                <p>passwords are different</p>
             </div>
+        </div>
 
-            <div class="form__field">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Username..">
-            </div>
-
-            <div class="form__field">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                       placeholder="Password.."
-                       title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
-
-                <div class="form__field__message" id="password-validation-message">
-                    <p>Password must contain the following:</p>
-                    <p id="letter">A lowercase letter</p>
-                    <p id="capital">A capital letter</p>
-                    <p id="number">A number</p>
-                    <p id="length">Minimum 8 characters</p>
-                </div>
-            </div>
-
-            <div class="form__field">
-                <label for="password-confirm">Confirm password</label>
-                <input type="password" id="password-confirm" name="password_confirm" placeholder="Password..">
-
-                <div class="form__field__message form__field__message--invalid" id="password-confirm-message">
-                    <p>passwords are different</p>
-                </div>
-            </div>
-
-            <button class="button" id="registration-form-submit">Submit</button>
-        </form>
-    </div>
+        <button class="button" id="registration-form-submit">Submit</button>
+    </form>
+</div>
 {% endblock %}
 
 {% block body %}
-    <script src="{{ url_for('static', filename='scripts/registration.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/registration.js') }}"></script>
 {% endblock %}

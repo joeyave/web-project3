@@ -7,8 +7,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script data-ad-client="ca-pub-1004561806649499" async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="icon" type="image/png" href="/static/favicons/favicon.ico">
     {% block head %}
     {% endblock %}
 </head>
@@ -41,13 +40,28 @@
         </nav>
     </header>
 
-    <div class="container sidebar">{% block sidebar %}{% endblock %}</div>
+    <div class="container sidebar">
+        <h2>Last Comments</h2>
+        <div class="comments-section" id="sidebar-comments"></div>
+    </div>
+
     <div class="container content">{% block content %}{% endblock %}</div>
 
     <div class="footer">
         <span class="icon"><i class="fab fa-instagram"></i></span>
     </div>
 </div>
+
+{% raw -%}
+    <script id="sidebar-comment-template" type="text/x-handlebars-template">
+        <div class="comment" id="{{ comment_id }}">
+            <span class="comment__author" id="comment_author">{{ comment_author }}</span> /
+            <span class="comment__date">{{ comment_timestamp }}</span>
+
+            <div class="comment__text">{{ comment_text }}</div>
+        </div>
+    </script>
+{% endraw %}
 
 <script src="https://kit.fontawesome.com/47ed321b5f.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>

@@ -3,34 +3,34 @@
 {% block title %}Add blog post{% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('add_blog_post') }}" method="POST" class="form form--full-width">
-        <h1 class="form__heading">Add your own blog post here!</h1>
+<form action="{{ url_for('add_blog_post') }}" method="POST" class="form form--full-width">
+    <h1 class="form__heading">Add your own blog post here!</h1>
 
-        <div class="form__field">
-            <label for="blog_title">Blog Title</label>
-            <input type="text" id="blog_title" name="blog_title" placeholder="Your title.." autocomplete="off" required>
+    <div class="form__field">
+        <label for="blog_title">Blog Title</label>
+        <input type="text" id="blog_title" name="blog_title" placeholder="Your title.." autocomplete="off" required>
+    </div>
+
+    <div class="form__field">
+        <label for="blog_post">Blog Post</label>
+
+        <div class="editor">
+            <nav class="nav">
+                <div class="nav__link custom-file-input custom-file-input--outline">
+                    <label for="files"><i class="fas fa-images"></i></label>
+                    <input type="file" name="files" id="files" multiple/>
+                </div>
+            </nav>
+
+            <textarea id="blog_post" name="blog_post" rows="20" placeholder="Some markdown text here.."
+                      required></textarea>
         </div>
+    </div>
 
-        <div class="form__field">
-            <label for="blog_post">Blog Post</label>
-
-            <div class="editor">
-                <nav class="nav">
-                    <div class="nav__link custom-file-input custom-file-input--outline">
-                        <label for="files"><i class="fas fa-images"></i></label>
-                        <input type="file" name="files" id="files" multiple/>
-                    </div>
-                </nav>
-
-                <textarea id="blog_post" name="blog_post" rows="20" placeholder="Some markdown text here.."
-                          required></textarea>
-            </div>
-        </div>
-
-        <button class="button" type="submit">Submit</button>
-    </form>
+    <button class="button" type="submit">Submit</button>
+</form>
 {% endblock %}
 
 {% block body %}
-    <script src="{{ url_for('static', filename='scripts/upload_file.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/upload_file.js') }}"></script>
 {% endblock %}

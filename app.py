@@ -1,64 +1,63 @@
 import datetime
 import decimal
 import os
-import requests
-from soup_functions import *
-
-from flask import *
-from flask_bcrypt import Bcrypt
-from flask_session import Session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from markdown import markdown
-from lxml.html.clean import clean_html
-
-from flask import Markup
-from werkzeug.utils import secure_filename
-from flask_socketio import SocketIO, emit
 
 # https://coderbook.com/@marcus/how-to-render-markdown-syntax-as-html-using-python/
-from bs4 import BeautifulSoup
 
-UPLOAD_FOLDER = os.getcwd() + '/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+from bs4 import BeautifulSoup
+from flask import *
+from flask import Markup
+from flask_bcrypt import Bcrypt
+from flask_session import Session
+from flask_socketio import SocketIO, emit
+from lxml.html.clean import clean_html
+from markdown import markdown
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from werkzeug.utils import secure_filename
+
+from soup_functions import *
 
 app = Flask(__name__)
 app.secret_key = "secret key"
+
+UPLOAD_FOLDER = os.getcwd() + '/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-bcrypt = Bcrypt(app)
-socketio = SocketIO(app, ping_interval=20)
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
-# Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+
+bcrypt = Bcrypt(app)
+socketio = SocketIO(app, ping_interval=20)
 Session(app)
+
+# Check for environment variable
+if not os.getenv("DATABASE_URL"):
+    raise RuntimeError("DATABASE_URL is not set")
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+
 def alchemyencoder(obj):
     """JSON encoder function for SQLAlchemy special classes."""
     if isinstance(obj, datetime.date):
-        return obj.isoformat()
+        return obj.strftime('%I:%M%p %d-%m-%Y')
     elif isinstance(obj, decimal.Decimal):
         return float(obj)
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -68,14 +67,20 @@ def index():
 
 @app.route('/blog')
 def blog():
+    # Блог посты всех пользователей с сортировкой по id блога.
     blog_posts = db.execute("SELECT * FROM blog_posts ORDER by blog_id DESC").fetchall()
     return render_template('blog.html', blog_posts=blog_posts)
 
 
 @app.route("/blog/<int:blog_id>", methods=["GET", "POST"])
 def get_blog(blog_id):
+    # Блог-пост и его автор.
     blog_post = db.execute(
-        "select * from blog_posts join users on users.user_id = blog_user_id where blog_id = :blog_id",
+        "select * "
+        "from blog_posts "
+        "inner join users "
+        "on users.user_id = blog_user_id "
+        "where blog_id = :blog_id",
         {"blog_id": blog_id}).fetchone()
 
     blog_text_html = markdown(blog_post['blog_text'])
@@ -95,6 +100,8 @@ def load_comments(blog_id):
     req = request.get_json()
     print(req)
 
+    # Комментарии и их авторы текущего блог-поста с сортировкой по убыванию даты создания
+    # главных комментариев и сортировкой по возрастанию его наследников.
     comments = db.execute(
         "select * from comments join users on users.user_id = comment_user_id "
         "where comment_blog_post_id = :blog_id order by thread_timestamp, comment_path",
@@ -108,8 +115,25 @@ def load_comments(blog_id):
     for comment in comments:
         comment['parent_path'] = "_".join(comment['comment_path'].split('_')[:-1])
     comments = json.dumps(comments)
-    
+
     return make_response(comments, 200)
+
+
+@app.route("/load_sidebar_comments", methods=["POST"])
+def load_sidebar_comments():
+    sidebar_comments = db.execute(
+        "select * "
+        "from comments "
+        "join users "
+        "on comment_user_id = users.user_id "
+        "where comment_level = 0 "
+        "order by comment_date "
+        "limit 10 "
+    )
+    db.remove()
+
+    sidebar_comments = json.dumps([dict(row) for row in sidebar_comments], default=alchemyencoder)
+    return make_response(sidebar_comments, 200)
 
 
 @socketio.on("submit comment")
@@ -122,7 +146,10 @@ def comment(data):
         except ValueError:
             parent_id = ""
 
+        #
         inserted_comment = db.execute(
+            # Формирование нового комментария:
+            # 1. Добавляю новый комментарий с полями, известными на текущий момент.
             "insert into comments "
             "(comment_text, comment_date, comment_user_id, comment_parent_id, comment_blog_post_id) "
             "values (:ct, current_timestamp, :cui, :cpi, :cbpi) returning *",
@@ -150,6 +177,8 @@ def comment(data):
             thread_timestamp = inserted_comment['comment_date']
             parent_comment = inserted_comment
 
+        # Формирование нового комментария:
+        # 2. Модификация путем добавления недостающих данных.
         inserted_comment = db.execute(
             "update comments "
             "set comment_path = :cp, comment_level = :cl, thread_timestamp = :tt "
@@ -164,6 +193,7 @@ def comment(data):
         ).fetchone()
         db.commit()
 
+        # Извлечение данных добавленного комментария для отображения на странице сайта в реальном времеми.
         inserted_comment = db.execute("select * "
                                       "from comments "
                                       "join users on comment_user_id = users.user_id "
@@ -200,6 +230,7 @@ def registration():
         if request.form.get("password") != request.form.get("password_confirm"):
             return "passwords are different"
 
+        # Сканирование таблицы пользователей при регистрации нового пользователя.
         user = db.execute("SELECT * FROM users WHERE username = :username",
                           {"username": request.form.get("username")}).fetchone()
 
