@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
             let img_links = "";
 
             for (let link of data.links) {
-                img_links += "\n![](.." + link + ")\n";
+                img_links += "\n![](" + link + ")\n";
             }
 
-            document.querySelector('#blog_post').innerHTML += img_links;
+            document.querySelector('#blog_post').value += img_links;
             document.querySelector('#files').value = "";
         };
 
