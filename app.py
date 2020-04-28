@@ -103,8 +103,12 @@ def load_comments(blog_id):
     # Комментарии и их авторы текущего блог-поста с сортировкой по убыванию даты создания
     # главных комментариев и сортировкой по возрастанию его наследников.
     comments = db.execute(
-        "select * from comments join users on users.user_id = comment_user_id "
-        "where comment_blog_post_id = :blog_id order by thread_timestamp, comment_path",
+        "select * "
+        "from comments "
+        "join users "
+        "on users.user_id = comment_user_id "
+        "where comment_blog_post_id = :blog_id "
+        "order by thread_timestamp, comment_path",
         {
             "blog_id": blog_id
         }
@@ -152,7 +156,8 @@ def comment(data):
             # 1. Добавляю новый комментарий с полями, известными на текущий момент.
             "insert into comments "
             "(comment_text, comment_date, comment_user_id, comment_parent_id, comment_blog_post_id) "
-            "values (:ct, current_timestamp, :cui, :cpi, :cbpi) returning *",
+            "values (:ct, current_timestamp, :cui, :cpi, :cbpi) "
+            "returning *",
             {
                 "ct": data['comment_text'],
                 "cui": session.get("user_id"),
@@ -167,7 +172,9 @@ def comment(data):
 
         if comment_level > 0:
             parent_comment = db.execute(
-                "select * from comments where comment_id = :parent_id",
+                "select * "
+                "from comments "
+                "where comment_id = :parent_id",
                 {
                     "parent_id": parent_id
                 }
@@ -196,7 +203,8 @@ def comment(data):
         # Извлечение данных добавленного комментария для отображения на странице сайта в реальном времеми.
         inserted_comment = db.execute("select * "
                                       "from comments "
-                                      "join users on comment_user_id = users.user_id "
+                                      "join users "
+                                      "on comment_user_id = users.user_id "
                                       "where comment_id = :ci",
                                       {
                                           "ci": inserted_comment['comment_id']
@@ -231,11 +239,14 @@ def registration():
             return "passwords are different"
 
         # Сканирование таблицы пользователей при регистрации нового пользователя.
-        user = db.execute("SELECT * FROM users WHERE username = :username",
+        user = db.execute("SELECT * "
+                          "FROM users "
+                          "WHERE username = :username",
                           {"username": request.form.get("username")}).fetchone()
 
         if user is None:
-            db.execute("INSERT INTO users (first_name, last_name, username, password) VALUES (:f, :l, :u, :p)",
+            db.execute("INSERT INTO users (first_name, last_name, username, password) "
+                       "VALUES (:f, :l, :u, :p)",
                        {"f": request.form.get("firstname"),
                         "l": request.form.get("lastname"),
                         "u": request.form.get("username"),
@@ -259,7 +270,9 @@ def login():
         if not request.form.get("password"):
             return "input password"
 
-        user = db.execute("SELECT * FROM users WHERE username = :username",
+        user = db.execute("SELECT * "
+                          "FROM users "
+                          "WHERE username = :username",
                           {"username": request.form.get("username")}).fetchone()
 
         if user is None:

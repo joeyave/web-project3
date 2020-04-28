@@ -333,6 +333,10 @@ input, textarea, select {
 .blog-post__credits {
   font-weight: lighter;
 }
+.blog-post__text {
+  padding: 0 1rem;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
