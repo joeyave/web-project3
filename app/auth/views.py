@@ -1,7 +1,8 @@
 from flask import request, session, redirect, render_template
 
-from app import db, bcrypt
+from app import db
 from . import auth
+from .utils import hash_password, verify_password
 
 
 @auth.route('/registration', methods=["GET", "POST"])
@@ -9,17 +10,14 @@ def registration():
     session.clear()
 
     if request.method == "POST":
-        if not request.form.get("firstname"):
-            return "error"
-        if not request.form.get("lastname"):
-            return "error"
-        if not request.form.get("username"):
-            return "input username"
-        if not request.form.get("password"):
-            return "input password"
-        if not request.form.get("password_confirm"):
-            return "confirm password"
-        if request.form.get("password") != request.form.get("password_confirm"):
+        first_name = request.form.get("firstname")
+        last_name = request.form.get("lastname")
+        username = request.form.get("username")
+        password = hash_password(request.form.get("password"))
+        password_confirm = request.form.get("password_confirm")
+
+        # TODO: error page.
+        if not verify_password(password, password_confirm):
             return "passwords are different"
 
         # Сканирование таблицы пользователей при регистрации нового пользователя.
@@ -28,20 +26,24 @@ def registration():
             "FROM users "
             "WHERE username = :username",
             {
-                "username": request.form.get("username")
+                "username": username
             }
         ).fetchone()
 
-        if user is None:
-            db.execute("INSERT INTO users (first_name, last_name, username, password) "
-                       "VALUES (:f, :l, :u, :p)",
-                       {"f": request.form.get("firstname"),
-                        "l": request.form.get("lastname"),
-                        "u": request.form.get("username"),
-                        "p": bcrypt.generate_password_hash(request.form.get("password")).decode('utf-8')})
-            db.commit()
-        else:
+        # TODO: error page.
+        if user:
             return "username is taken"
+
+        db.execute(
+            "INSERT INTO users (first_name, last_name, username, password) "
+            "VALUES (:f, :l, :u, :p)",
+            {"f": first_name,
+             "l": last_name,
+             "u": username,
+             "p": password
+             }
+        )
+        db.commit()
 
         return redirect("/login")
     else:
@@ -53,24 +55,23 @@ def login():
     session.clear()
 
     if request.method == "POST":
-        if not request.form.get("username"):
-            return "input username"
-        if not request.form.get("password"):
-            return "input password"
+        username = request.form.get("username")
+        password = request.form.get("password")
 
-        user = db.execute("SELECT * "
-                          "FROM users "
-                          "WHERE username = :username",
-                          {"username": request.form.get("username")}).fetchone()
+        user = db.execute(
+            "SELECT * "
+            "FROM users "
+            "WHERE username = :username",
+            {
+                "username": username
+            }
+        ).fetchone()
 
-        if user is None:
-            return "No such a auth"
-
-        if not bcrypt.check_password_hash(user.password, request.form.get("password")):
-            return "wrong password"
-
-        session["user_id"] = user.user_id
-        session["username"] = user.username
+        if user and verify_password(user.password, password):
+            session["user_id"] = user.user_id
+            session["username"] = user.username
+        else:
+            return "wrong username or password"
 
         return redirect("/")
     else:
