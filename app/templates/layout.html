@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="icon" type="image/png" href="/app/staticatic/favicons/favicon.ico">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicons/favicon.ico') }}">
     {% block head %}
     {% endblock %}
 </head>
@@ -54,7 +54,7 @@
 
 {% raw -%}
     <script id="sidebar-comment-template" type="text/x-handlebars-template">
-        <div class="comment" id="{{ comment_id }}">
+        <div class="comment">
             <span class="comment__author" id="comment_author">{{ comment_author }}</span> /
             <span class="comment__date">{{ comment_timestamp }}</span>
 

@@ -36,7 +36,6 @@ function renderSidebarComments() {
 
 function renderSidebarComment(commentData) {
     const content = sidebar_comment_template({
-        'comment_id': commentData['comment_path'],
         'comment_author': commentData['username'],
         'comment_timestamp': commentData['comment_date'],
         'comment_text': commentData['comment_text']
