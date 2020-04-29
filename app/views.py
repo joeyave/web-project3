@@ -1,58 +1,22 @@
-import datetime
-import decimal
+import json
 import os
 
-# https://coderbook.com/@marcus/how-to-render-markdown-syntax-as-html-using-python/
-
 from bs4 import BeautifulSoup
-from flask import *
-from flask import Markup
-from flask_bcrypt import Bcrypt
-from flask_session import Session
-from flask_socketio import SocketIO, emit
+from flask import render_template, send_from_directory, request, make_response, session, redirect, url_for, jsonify
+from flask_socketio import emit
 from lxml.html.clean import clean_html
 from markdown import markdown
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from markupsafe import Markup
 from werkzeug.utils import secure_filename
 
-from soup_functions import *
+from app import app, db, socketio, bcrypt
 
-app = Flask(__name__)
-app.secret_key = "secret key"
-
-UPLOAD_FOLDER = os.getcwd() + '/static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
-# Configure session to use filesystem
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-
-bcrypt = Bcrypt(app)
-socketio = SocketIO(app, ping_interval=20)
-Session(app)
-
-# Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
-
-# Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
+from .utils import *
 
 
-def allowed_file(filename):
-    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-
-def alchemyencoder(obj):
-    """JSON encoder function for SQLAlchemy special classes."""
-    if isinstance(obj, datetime.date):
-        return obj.strftime('%I:%M%p %d-%m-%Y')
-    elif isinstance(obj, decimal.Decimal):
-        return float(obj)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/uploads/<filename>')
@@ -60,15 +24,14 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
-
-
 @app.route('/blog')
 def blog():
     # Блог посты всех пользователей с сортировкой по id блога.
-    blog_posts = db.execute("SELECT * FROM blog_posts ORDER by blog_id DESC").fetchall()
+    blog_posts = db.execute(
+        "SELECT * "
+        "FROM blog_posts "
+        "ORDER by blog_id DESC"
+    ).fetchall()
     return render_template('blog.html', blog_posts=blog_posts)
 
 
@@ -81,7 +44,10 @@ def get_blog(blog_id):
         "inner join users "
         "on users.user_id = blog_user_id "
         "where blog_id = :blog_id",
-        {"blog_id": blog_id}).fetchone()
+        {
+            "blog_id": blog_id
+        }
+    ).fetchone()
 
     blog_text_html = markdown(blog_post['blog_text'])
     # Clean from all js injections.
@@ -201,14 +167,16 @@ def comment(data):
         db.commit()
 
         # Извлечение данных добавленного комментария для отображения на странице сайта в реальном времеми.
-        inserted_comment = db.execute("select * "
-                                      "from comments "
-                                      "join users "
-                                      "on comment_user_id = users.user_id "
-                                      "where comment_id = :ci",
-                                      {
-                                          "ci": inserted_comment['comment_id']
-                                      })
+        inserted_comment = db.execute(
+            "select * "
+            "from comments "
+            "join users "
+            "on comment_user_id = users.user_id "
+            "where comment_id = :ci",
+            {
+                "ci": inserted_comment['comment_id']
+            }
+        )
         db.remove()
 
         # use special handler for dates and decimals
@@ -323,11 +291,7 @@ def upload_file():
     for file in files:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join('UPLOAD_FOLDER', filename))
             file_urls.append(url_for('uploaded_file', filename=filename))
 
     return jsonify({'links': file_urls})
-
-
-if __name__ == '__main__':
-    socketio.run(app)
