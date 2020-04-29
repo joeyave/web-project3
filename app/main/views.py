@@ -157,7 +157,8 @@ def comment(data):
         inserted_comment = db.execute(
             "update comments "
             "set comment_path = :cp, comment_level = :cl, thread_timestamp = :tt "
-            "where comment_id = :ci returning *",
+            "where comment_id = :ci "
+            "returning *",
             {
                 "ci": inserted_comment['comment_id'],
 
