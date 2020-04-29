@@ -2,29 +2,31 @@ import json
 import os
 
 from bs4 import BeautifulSoup
-from flask import render_template, send_from_directory, request, make_response, session, redirect, url_for, jsonify
+from flask import render_template, send_from_directory, request, make_response, session, redirect, url_for, jsonify, \
+    current_app
 from flask_socketio import emit
 from lxml.html.clean import clean_html
 from markdown import markdown
 from markupsafe import Markup
 from werkzeug.utils import secure_filename
 
-from app import app, db, socketio, bcrypt
+from app import db, socketio, bcrypt
+from . import main
 
-from .utils import *
+from app.utils import *
 
 
-@app.route('/')
+@main.route('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/uploads/<filename>')
+@main.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
 
 
-@app.route('/blog')
+@main.route('/blog')
 def blog():
     # Блог посты всех пользователей с сортировкой по id блога.
     blog_posts = db.execute(
@@ -35,7 +37,7 @@ def blog():
     return render_template('blog.html', blog_posts=blog_posts)
 
 
-@app.route("/blog/<int:blog_id>", methods=["GET", "POST"])
+@main.route("/blog/<int:blog_id>", methods=["GET", "POST"])
 def get_blog(blog_id):
     # Блог-пост и его автор.
     blog_post = db.execute(
@@ -61,7 +63,7 @@ def get_blog(blog_id):
     return render_template("blog_post.html", blog_post=blog_post, soup=soup)
 
 
-@app.route("/blog/<int:blog_id>/load_comments", methods=["POST"])
+@main.route("/blog/<int:blog_id>/load_comments", methods=["POST"])
 def load_comments(blog_id):
     req = request.get_json()
     print(req)
@@ -89,7 +91,7 @@ def load_comments(blog_id):
     return make_response(comments, 200)
 
 
-@app.route("/load_sidebar_comments", methods=["POST"])
+@main.route("/load_sidebar_comments", methods=["POST"])
 def load_sidebar_comments():
     sidebar_comments = db.execute(
         "select * "
@@ -188,7 +190,7 @@ def comment(data):
         emit("announce comment", inserted_comment, broadcast=True)
 
 
-@app.route('/registration', methods=["GET", "POST"])
+@main.route('/registration', methods=["GET", "POST"])
 def registration():
     session.clear()
 
@@ -228,7 +230,7 @@ def registration():
         return render_template("registration.html")
 
 
-@app.route('/login', methods=["GET", "POST"])
+@main.route('/login', methods=["GET", "POST"])
 def login():
     session.clear()
 
@@ -257,13 +259,13 @@ def login():
         return render_template("login.html")
 
 
-@app.route("/logout")
+@main.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
 
-@app.route('/add_blog_post', methods=["GET", "POST"])
+@main.route('/add_blog_post', methods=["GET", "POST"])
 def add_blog_post():
     if request.method == "POST":
         if session.get('user_id'):
@@ -283,7 +285,7 @@ def add_blog_post():
         return render_template("add_blog_post.html")
 
 
-@app.route('/upload_file', methods=["POST"])
+@main.route('/upload_file', methods=["POST"])
 def upload_file():
     file_urls = []
     files = request.files.getlist('files')
@@ -291,7 +293,7 @@ def upload_file():
     for file in files:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_urls.append(url_for('uploaded_file', filename=filename))
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file_urls.append(url_for('main.uploaded_file', filename=filename))
 
     return jsonify({'links': file_urls})

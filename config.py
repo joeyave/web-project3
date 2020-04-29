@@ -5,6 +5,8 @@ app_dir = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConfig:
     SECRET_KEY = os.getenv('SECRET_KEY') or 'secret key'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     UPLOAD_FOLDER = os.getcwd() + '/app/static/uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     SESSION_PERMANENT = False
