@@ -3,7 +3,7 @@
 {% block title %}Log In{% endblock %}
 
 {% block content %}
-<form action="{{ url_for('main.login') }}" method="POST" class="form" id="login-form">
+<form action="{{ url_for('auth.login') }}" method="POST" class="form" id="login-form">
     <h1 class="form__heading">Log In</h1>
 
     <div class="form__field">

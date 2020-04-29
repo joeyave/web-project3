@@ -31,10 +31,10 @@
             {% if session.user_id %}
                 <a class="nav__link nav__link--right" href="#">{{ session.username }}</a>
                 <a class="nav__link" href="{{ url_for('main.add_blog_post') }}">Add blog post</a>
-                <a class="nav__link" href="{{ url_for('main.logout') }}">Log Out</a>
+                <a class="nav__link" href="{{ url_for('auth.logout') }}">Log Out</a>
             {% else %}
-                <a class="nav__link nav__link--right" href="{{ url_for('main.registration') }}">Registration</a>
-                <a class="nav__link" href="{{ url_for('main.login') }}">Log In</a>
+                <a class="nav__link nav__link--right" href="{{ url_for('auth.registration') }}">Registration</a>
+                <a class="nav__link" href="{{ url_for('auth.login') }}">Log In</a>
             {% endif %}
 
         </nav>

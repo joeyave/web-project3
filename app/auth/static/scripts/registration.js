@@ -1,4 +1,4 @@
-// When the user starts to type something inside the password field
+// When the auth starts to type something inside the password field
 const password = document.querySelector("#password");
 const password_validation_message = document.querySelector('#password-validation-message');
 password.oninput = () => {
